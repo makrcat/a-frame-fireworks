@@ -460,50 +460,51 @@ function brightcolor() {
 }
 
 function merica() {
-  const baseColors = {
-    red:    [0.8, 0.1, 0.1],
-    orange:    [0.8, 0.4, 0.1],
-    white:  [0.8, 0.8, 0.8],
-    blue:   [0.1, 0.1, 0.8],
-    yellow: [0.8, 0.6, 0.1],
-    lightblue: [0.3, 0.3, 0.7],
-  };
+    const baseColors = {
+        red: [0.8, 0.1, 0.1],
+        orange: [0.8, 0.4, 0.1],
+        white: [0.8, 0.8, 0.8],
+        blue: [0.1, 0.1, 0.8],
+        yellow: [0.8, 0.6, 0.1],
+        lightblue: [0.3, 0.3, 0.7],
+    };
 
-  const keys = Object.keys(baseColors);
-  const choice = keys[Math.floor(Math.random() * keys.length)];
-  const base = baseColors[choice];
+    const keys = Object.keys(baseColors);
+    const choice = keys[Math.floor(Math.random() * keys.length)];
+    const base = baseColors[choice];
 
-  return base.map(c => c * (0.7 + Math.random() * 0.3));
+    return base.map(c => c * (0.7 + Math.random() * 0.3));
 }
 
 function newyear() {
-  const baseColors = {
-    gold:   [1, 0.84, 0],   
-    silver: [0.75, 0.75, 0.75], 
-    red:    [0.8, 0.2, 0.2],
-    red_again:  [0.6, 0.1, 0.1],
-    
-    orange:    [0.8, 0.4, 0.1],
-    white:  [0.8, 0.8, 0.8],
-    yellow: [0.7, 0.6, 0.1],
-    blue:   [0.1 , 0.1, 0.6],
-    pink: [0.984, 0.776, 0.812],
+    const baseColors = {
+        gold: [1, 0.84, 0],
+        silver: [0.75, 0.75, 0.75],
+        red: [0.8, 0.2, 0.2],
+        red_again: [0.6, 0.1, 0.1],
 
-    lightGold:[1, 0.9, 0.4],
-  };
+        orange: [0.8, 0.4, 0.1],
+        white: [0.8, 0.8, 0.8],
+        yellow: [0.7, 0.6, 0.1],
+        blue: [0.1, 0.1, 0.6],
+        pink: [0.984, 0.776, 0.812],
 
-  const keys = Object.keys(baseColors);
-  const choice = keys[Math.floor(Math.random() * keys.length)];
-  const base = baseColors[choice];
+        lightGold: [1, 0.9, 0.4],
+    };
 
-  return base.map(c => c * (0.7 + Math.random() * 0.3));
+    const keys = Object.keys(baseColors);
+    const choice = keys[Math.floor(Math.random() * keys.length)];
+    const base = baseColors[choice];
+
+    return base.map(c => c * (0.7 + Math.random() * 0.3));
 }
 
 //@ts-ignore
 // fixed
+// THIS is hard coded
 AFRAME.registerComponent('particle-animation', {
     schema: {
-        maxActive: { type: 'int', default: 8 }
+        maxActive: { type: 'int', default: 16 }
     },
 
     init: function () {
@@ -520,8 +521,16 @@ AFRAME.registerComponent('particle-animation', {
         this.elapsed += delta;
 
 
+
         if (this.elapsed >= this.nextSpawnTime) {
-            this.spawnFirework();
+            const burstCount = Math.floor(Math.random() * 3) + 1;
+
+            for (let i = 0; i < burstCount; i++) {
+                
+                setTimeout(() => {
+                    this.spawnFirework();
+                }, i * 100); 
+            }
 
             //@ts-ignore
             this.nextSpawnTime = this.elapsed + Math.floor(Math.random() * 500 + window.settings["spawnDelay"]);
@@ -553,7 +562,7 @@ AFRAME.registerComponent('particle-animation', {
 
     spawnFirework: function () {
         const position = new THREE.Vector3(
-            this.basePosition.x + Math.random() * 100,
+            this.basePosition.x + Math.random() * 150,
             this.basePosition.y,
             this.basePosition.z - Math.random() * 25
         );
@@ -580,7 +589,7 @@ AFRAME.registerComponent('particle-animation', {
             case "Crossette": FireworkClass = Crossette; break;
 
             default:
-                const fireworkClasses = [Willow, Chrysanthemum, Spider, Peony, Crossette, Crossette];
+                const fireworkClasses = [Willow, Willow, Chrysanthemum, Spider, Peony, Crossette, Crossette];
                 FireworkClass = fireworkClasses[Math.floor(Math.random() * fireworkClasses.length)];
         }
 
